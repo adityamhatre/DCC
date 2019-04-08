@@ -39,16 +39,26 @@ def first_missing_positive_integer(arr):
     # <-- Edge case
 
     # Iterate over array to move elements to "correct" place
-    for i, v in enumerate(arr):
+    i = 0
+    while i < len(arr):
         curr = arr[i]
         if not curr:  # Skipping None elements
+            i += 1
             continue
         if 0 >= curr or curr >= len(arr):  # Skipping elements which are less than 1 and greater than len of arr
+            i += 1
             continue
-        if i - 1 == curr:  # Skipping elements which are already in place
+        if i + 1 == curr:  # Skipping elements which are already in place
+            i += 1
             continue
-        else:  # Swap elements to get a[i] at it's correct place
-            arr[i], arr[curr - 1] = arr[curr - 1], arr[i]
+        if curr == arr[curr - 1]:  # Duplicate element check
+            i += 1
+            continue
+        arr[i], arr[curr - 1] = arr[curr - 1], arr[i]
+        if i != 0:
+            i -= 1
+        else:
+            i = 0
 
     # Iterate over array
     for i, v in enumerate(arr):
@@ -76,6 +86,9 @@ class Test(unittest.TestCase):
     def test_with_none_elements(self):
         self.assertEqual(first_missing_positive_integer([None]), 1)
         self.assertEqual(first_missing_positive_integer([None, None, None, None]), 1)
+
+    def test_all_present_with_negatives(self):
+        self.assertEqual(first_missing_positive_integer([3, 2, 4, -1, -2, 1]), 5)
 
 
 if __name__ == '__main__':
