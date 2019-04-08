@@ -46,20 +46,21 @@ class Node:
         :return: Returns next node in the list or None if this is the last node
         """
         try:
-            return dereference_pointer(get_pointer(previous) ^ get_pointer(self.both))
+            return dereference_pointer(get_pointer(previous) ^ self.both)
         except KeyError:
             return None
 
     def __repr__(self):
-        return "{}".format(self.data)
+        return "{}: {}, {}".format(id(self), self.data, self.both)
 
 
 class DoublyLinkedList:
-    head = Node()
     size = 0
 
     def __init__(self):
-        nodes[get_pointer(self.head)] = self.head  # Saving head node's pointer in the memory map
+        head_node = Node()
+        self.head = get_pointer(head_node)
+        nodes[get_pointer(head_node)] = head_node  # Saving head node's pointer in the memory map
 
     def add(self, data):
         """
@@ -81,18 +82,18 @@ class DoublyLinkedList:
         # <-- Edge case
 
         new_node = Node(data)  # Creating new node
-        if self.head.both is None:  # List is empty, Point head to new node
-            self.head.both = get_pointer(new_node)
-            nodes[get_pointer(new_node)] = new_node  # Save to map
-        else:  # Add to end of list
-            prev = self.head
-            curr = self.head.both
-            while dereference_pointer(curr.both) is not None:
+        if dereference_pointer(self.head).both is None:
+            dereference_pointer(self.head).both = get_pointer(new_node) ^ 0
+            nodes[get_pointer(new_node)] = new_node
+        else:
+            prev = dereference_pointer(self.head)
+            curr = dereference_pointer(prev.both)
+            while curr.both is not None:
                 t = curr
                 curr = curr.get_next_node(prev)
                 prev = t
             curr.both = get_pointer(prev) ^ get_pointer(new_node)
-            nodes[get_pointer(prev) ^ get_pointer(new_node)] = new_node
+            nodes[get_pointer(new_node)] = new_node
         self.size += 1  # Increment size of list
 
     def get(self, i):
@@ -101,31 +102,32 @@ class DoublyLinkedList:
         :param i: The index
         :return: Node at the index
         """
-        if i is None:
-            raise ValueError("None provided. Only int supported")
         if type(i) is not int:
-            raise TypeError("Only int allowed. Provided: {}", type(i))
+            raise TypeError('{} provided. Required: int'.format(type(i)))
         if i < 0 or i >= self.size:
-            raise IndexError("list index {} out of range".format(i))
-        else:
-            return self.traverse(get_mode=True, get_i=i)
+            raise IndexError("index {} out of bounds".format(i))
+        return self.traverse(get_mode=True, index=i)
 
-    def traverse(self, get_mode=False, get_i=None):
+    def traverse(self, get_mode=False, index=None):
         """
         Traverses the whole list
         :param get_mode: Optional param; only used by get()
-        :param get_i:  Optional param; only used by get()
+        :param index:  Optional param; only used by get()
         """
+        prev = dereference_pointer(self.head)
+        curr = dereference_pointer(prev.both)
         counter = 0
-        prev = self.head
-        curr = self.head.both
         while curr is not None:
-            if get_mode and counter == get_i:
-                return curr
+            if get_mode:
+                if counter == index:
+                    return curr
             if not get_mode:
                 print(curr.data)
             t = curr
-            curr = curr.get_next_node(prev)
+            if curr.both is not None:
+                curr = curr.get_next_node(prev)
+            else:
+                break
             prev = t
             counter += 1
 
@@ -135,28 +137,30 @@ class TestSolution(unittest.TestCase):
         self.dll = DoublyLinkedList()
 
     def test_add(self):
-        add_first_node = Node(1)
-        self.dll.add(add_first_node)
-        self.assertTrue(self.dll.get(0), add_first_node)
+        self.dll.add(1)
+        self.assertTrue(self.dll.get(0), 1)
 
-        add_second_node = Node(2)
-        self.dll.add(add_second_node)
-        self.assertTrue(self.dll.get(1), add_second_node)
+        self.dll.add(2)
+        self.assertTrue(self.dll.get(1), 2)
 
     def test_add_none(self):
         self.assertRaises(ValueError, self.dll.add, None)
 
     def test_get(self):
-        self.dll.add(Node(1))
-        self.dll.add(Node(2))
+        self.dll.add(1)
+        self.dll.add(2)
         self.assertTrue(self.dll.get(0).data, 1)
         self.assertTrue(self.dll.get(1).data, 2)
 
     def test_get_index_out_of_bounds(self):
-        self.dll.add(Node(1))
-        self.dll.add(Node(2))
+        self.dll.add(1)
+        self.dll.add(2)
         self.assertRaises(IndexError, self.dll.get, -1)
         self.assertRaises(IndexError, self.dll.get, 2)
+
+    def test_invalid_get(self):
+        self.dll.add(1)
+        self.assertRaises(TypeError, self.dll.get, 1.5)
 
 
 if __name__ == '__main__':
