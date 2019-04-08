@@ -82,16 +82,16 @@ class DoublyLinkedList:
 
         new_node = Node(data)  # Creating new node
         if self.head.both is None:  # List is empty, Point head to new node
-            self.head.both = new_node
+            self.head.both = get_pointer(new_node)
             nodes[get_pointer(new_node)] = new_node  # Save to map
         else:  # Add to end of list
             prev = self.head
             curr = self.head.both
-            while curr.both is not None:
+            while dereference_pointer(curr.both) is not None:
                 t = curr
                 curr = curr.get_next_node(prev)
                 prev = t
-            curr.both = new_node
+            curr.both = get_pointer(prev) ^ get_pointer(new_node)
             nodes[get_pointer(prev) ^ get_pointer(new_node)] = new_node
         self.size += 1  # Increment size of list
 
