@@ -138,19 +138,20 @@ class TestSolution(unittest.TestCase):
 
     def test_add(self):
         self.dll.add(1)
-        self.assertTrue(self.dll.get(0), 1)
+        self.assertTrue(self.dll.get(0).data, 1)
 
         self.dll.add(2)
-        self.assertTrue(self.dll.get(1), 2)
+        self.assertTrue(self.dll.get(1).data, 2)
 
     def test_add_none(self):
         self.assertRaises(ValueError, self.dll.add, None)
 
     def test_get(self):
-        self.dll.add(1)
-        self.dll.add(2)
-        self.assertTrue(self.dll.get(0).data, 1)
-        self.assertTrue(self.dll.get(1).data, 2)
+        for i in range(5):
+            self.dll.add(i)
+
+        for i in range(5):
+            self.assertEqual(self.dll.get(i).data, i)
 
     def test_get_index_out_of_bounds(self):
         self.dll.add(1)
