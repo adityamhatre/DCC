@@ -41,7 +41,13 @@ def num_ways_decode(string, cache=None):
     first_digit = int(string[0])  # Extract first digit from string
     combined_first_second = 10 * first_digit + int(string[1])  # Combine with second digit
     if combined_first_second > 26:  # Check if greater than 26
-        return 1  # Only one way to decode
+        if len(string) == 2:  # Only one way to decode if length is 2
+            return 1
+        else:
+            rest_of_string = string[2:]  # Get the rest of string and decode it
+            cache[rest_of_string] = num_ways_decode(rest_of_string, cache) if rest_of_string not in cache else cache[
+                rest_of_string]
+            return cache[rest_of_string]
     else:  # Else there are recursive num_ways(first) + num_ways(second) ways to decode
         first = string[1:]  # Exclude first char and get rest of string
         second = string[2:]  # Exclude first two chars and get rest of string
@@ -79,6 +85,9 @@ class Test(unittest.TestCase):
 
     def test_case_invalid_chars(self):
         self.assertEqual(num_ways_decode("123a"), 0)
+
+    def test_aa(self):
+        self.assertEqual(num_ways_decode("2721"), 2)
 
 
 if __name__ == '__main__':
