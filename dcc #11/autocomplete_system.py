@@ -57,7 +57,7 @@ def preprocess_set(all_words):
 
 def check_prefix_exists(root, prefix):
     """
-    Thie function checks if the prefix pattern is present in the trie or not
+    This function checks if the prefix pattern is present in the trie or not
     :param root: The root node of the trie
     :param prefix: The prefix pattern to be searched
     :return: Pair of if prefix exists and the node at which the prefix ends
@@ -102,7 +102,6 @@ def get_words_from_prefix(node, prefix, results):
     :param node: The prefix node of the trie
     :param prefix: Prefix to form words with
     :param results: Results array passed from helper function
-    :return: The filled results array
     """
     if node.pointers:  # Check if node has pointers
         for pointer in node.pointers:  # It has pointers, go down one level
@@ -110,7 +109,6 @@ def get_words_from_prefix(node, prefix, results):
                                   results)  # recurse till leaf with prefix updated to incorporate the child letter
     else:  # No pointers, meaning a leaf node
         results.append(prefix)  # Append the prefix to results array
-        return results  # Return the results array
 
 
 words = {'dog', 'deer', 'deal', 'lol'}
