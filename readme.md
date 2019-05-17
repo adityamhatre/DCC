@@ -15,3 +15,4 @@
 - Problem 9: [Find the largest sum of non adjacent numbers](./dcc%20%239/largest_sum_of_non_adjacent_numbers.py)
 - Problem 10: [Implement job scheduler](./dcc%20%2310/job_scheduler.py)
 - Problem 11: [Make an autocomplete system (TRIE data structure)](./dcc%20%2311/autocomplete_system.py)
+- Problem 12: [Unique ways to climb staircase](./dcc%20%2312/unique_ways_to_climb_staircase.py)
