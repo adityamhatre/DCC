@@ -20,3 +20,4 @@
 - Problem 14: [Estimate π to 3 decimal places using a Monte Carlo method](dcc%20%2314/pi_using_monte_carlo.py)
 - Problem 15: [Random element from stream](dcc%20%2315/random_element_from_stream.py)
 - Problem 16: [Implement a data structure to record N numbers and fetch last ith number](dcc%20%2316/store_last_n_numbers.py)
+- Problem 17: [Find the longest (number of characters) absolute path to a file within the file system](dcc%20%2317/longest_absolute_path_to_a_file.py)
